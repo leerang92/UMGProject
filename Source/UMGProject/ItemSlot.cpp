@@ -4,5 +4,8 @@
 #include "ItemSlot.h"
 
 
-
+void UItemSlot::GetButton(UButton* GetButton)
+{
+	Button = GetButton;
+}
 

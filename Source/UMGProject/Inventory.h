@@ -5,6 +5,10 @@
 #include "Blueprint/UserWidget.h"
 #include "UniformGridPanel.h"
 #include "UniformGridSlot.h"
+#include "SlateBrush.h"
+#include "SlateTypes.h"
+#include "SlateColor.h"
+#include "ItemSlot.h"
 #include "Inventory.generated.h"
 
 /**
@@ -21,6 +25,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widgets")
 	TSubclassOf<class UUserWidget> ItemSlot;
+	
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
+	FButtonStyle SetStyle();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 	int SlotSize;

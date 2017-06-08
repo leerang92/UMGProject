@@ -12,6 +12,16 @@ UUserWidget* UInventory::CreateItemSlot(UUniformGridPanel* UniformGrid)
 			ItemWidget = CreateWidget<UUserWidget>(GetWorld(), ItemSlot);
 			if (ItemWidget)
 			{
+				//UItemSlot* Item = Cast<UItemSlot>(ItemWidget);
+
+				//FSlateBrush SBrush;
+				//SBrush.ImageSize = FVector2D(32.0f, 32.0f);
+				//SBrush.TintColor = FLinearColor(0.079f, 0.085f, 0.068f, 1.0f);
+
+				//FButtonStyle BtnStyle;
+				//BtnStyle.SetNormal(SBrush);
+
+				//Item->Button->SetStyle(BtnStyle);
 				AddGridSlot(UniformGrid->AddChildToUniformGrid(ItemWidget));
 				UE_LOG(LogClass, Warning, TEXT("Succes Create!"));
 			}
@@ -19,6 +29,33 @@ UUserWidget* UInventory::CreateItemSlot(UUniformGridPanel* UniformGrid)
 		
 	}
 	return ItemWidget;
+}
+
+FButtonStyle UInventory::SetStyle()
+{
+	FSlateBrush SBrush;
+	SBrush.ImageSize = FVector2D(32.0f, 32.0f);
+	SBrush.TintColor = FLinearColor(0.079f, 0.085f, 0.068f, 0.2f);
+
+	FButtonStyle BtnStyle;
+	BtnStyle.SetNormal(SBrush);
+	//FSlateBrush SetBrush{
+	//	(SlateBrushDefs::DefaultImageSize, SlateBrushDefs::DefaultImageSize)
+	//	, ESlateBrushDrawType::Image
+	//	, 0.0f
+	//	, FLinearColor::White
+	//	, FLinearColor::White
+	//	, ESlateBrushTileType::NoTile
+	//	, ESlateBrushMirrorType::NoMirror
+	//	, ESlateBrushImageType::NoImage
+	//	, nullptr
+	//	, NAME_None
+	//	, false
+	//	, false
+	//	, ForceInit };
+	//SetBrush.ImageSize = FVector2D(32.0f, 32.0f);
+	//BtnStyle.SetNormal(SetBrush);
+	return BtnStyle;
 }
 
 void UInventory::AddGridSlot(UUniformGridSlot* GridSlot)
