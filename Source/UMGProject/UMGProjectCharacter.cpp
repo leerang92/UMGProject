@@ -2,6 +2,7 @@
 
 #include "UMGProject.h"
 #include "Kismet/HeadMountedDisplayFunctionLibrary.h"
+#include "BaseItem.h"
 #include "UMGProjectCharacter.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -11,6 +12,7 @@ AUMGProjectCharacter::AUMGProjectCharacter()
 {
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
+	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &AUMGProjectCharacter::OnOverlapBegin);
 
 	// set our turn rates for input
 	BaseTurnRate = 45.f;
@@ -42,6 +44,13 @@ AUMGProjectCharacter::AUMGProjectCharacter()
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
 }
 
+void AUMGProjectCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+
+	Item = NewObject<UItemManager>(this);
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Input
 
@@ -69,8 +78,9 @@ void AUMGProjectCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 
 	// VR headset functionality
 	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &AUMGProjectCharacter::OnResetVR);
-}
 
+	InputComponent->BindAction("PickUp", IE_Pressed, this, &AUMGProjectCharacter::PickUpItem);
+}
 
 void AUMGProjectCharacter::OnResetVR()
 {
@@ -85,6 +95,35 @@ void AUMGProjectCharacter::TouchStarted(ETouchIndex::Type FingerIndex, FVector L
 void AUMGProjectCharacter::TouchStopped(ETouchIndex::Type FingerIndex, FVector Location)
 {
 		StopJumping();
+}
+
+void AUMGProjectCharacter::OnOverlapBegin(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
+{
+	UE_LOG(LogClass, Warning, TEXT("Get Item0"));
+	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr))
+	{
+		ABaseItem* GetItem = Cast<ABaseItem>(OtherActor);
+		UE_LOG(LogClass, Warning, TEXT("Find Item"));
+		if (GetItem)
+		{
+			UE_LOG(LogClass, Warning, TEXT("Get Item"));
+			Item->GetItem(GetItem->ItemInfo);
+			
+		}
+	}
+}
+
+void AUMGProjectCharacter::PickUpItem()
+{
+	if (IsPickUp)
+	{
+		ABaseItem* GetItem = Cast<ABaseItem>(ItemActor);
+		if (GetItem) 
+		{
+			Item->GetItem(GetItem->ItemInfo);
+			ItemActor->Destroy();
+		}
+	}
 }
 
 void AUMGProjectCharacter::TurnAtRate(float Rate)

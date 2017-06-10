@@ -4,6 +4,8 @@
 
 #include "Blueprint/UserWidget.h"
 #include "Button.h"
+#include "TextBlock.h"
+#include "ItemSlotButton.h"
 #include "ItemSlot.generated.h"
 
 /**
@@ -16,12 +18,13 @@ class UMGPROJECT_API UItemSlot : public UUserWidget
 
 public:
 
-	UFUNCTION(BlueprintCallable, Category = "Slot")
-	void GetButton(UButton* GetButton);
+	void NativeConstruct();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Slot")
-	UButton* Button;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Slot")
-	TSubclassOf<UButton> Button1;
+	UButton* Slot_Button;
+
+	UPROPERTY()
+	UTextBlock* Amount_Text;
+
+	void SetButtonStyle(const FButtonStyle& InStyle, const int& Amount);
 };
