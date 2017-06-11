@@ -26,19 +26,23 @@ void UInventory::CreateItemSlot()
 			UUserWidget* ItemWidget = CreateWidget<UUserWidget>(GetWorld(), ItemSlot);
 			if (ItemWidget)
 			{
-				//ItemSlotList.Add(ItemWidget);
-				// Uniform Gird에 추가
+				// Uniform Gird에 Slot UI(Widget) 클래스 추가
 				AddGridSlot(ItemGrid->AddChildToUniformGrid(ItemWidget));
+
 				UItemSlot* Slot = Cast<UItemSlot>(ItemWidget);
-				if (Slot)
+				AUMGProjectCharacter* Character = Cast<AUMGProjectCharacter>(GetOwningPlayerPawn());
+				if (Slot && Character)
 				{
-					AUMGProjectCharacter* Character = Cast<AUMGProjectCharacter>(GetOwningPlayerPawn());
-					if (Character)
+					// 버튼의 아이템 이미지 그리기
+					UTexture2D* ItemImage = Character->Item->GetItemImage(i);
+					Slot->SetButtonStyle(SetStyle(ItemImage));
+
+					// 아이템 슬롯에 아이템 정보 저장
+					if (Character->Item->GetInventorySize() > i)
 					{
-						UTexture2D* ItemImage = Character->Item->GetItemImage(i);
-						int ItemAmount = Character->Item->GetItemAmount(i);
-						Slot->SetButtonStyle(SetStyle(ItemImage), ItemAmount);
-					}	
+						FItemInfo ItemInfo = Character->Item->GetItemInfo(i);
+						Slot->SetItemInfo(ItemInfo);
+					}
 				}
 			}
 		}
@@ -60,6 +64,7 @@ FButtonStyle UInventory::SetStyle(UTexture2D* GetImage)
 	FButtonStyle BtnStyle;
 	BtnStyle.SetNormal(SBrush);
 
+	// 커서를 올렸을 때와 클릭시의 버튼 스타일 설정
 	SBrush.TintColor = FLinearColor(0.079f, 0.085f, 0.068f, 0.4f);
 	BtnStyle.SetHovered(SBrush);
 	BtnStyle.SetPressed(SBrush);

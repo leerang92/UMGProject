@@ -6,22 +6,24 @@
 
 void UItemManager::GetItem(FItemInfo Item)
 {
+	// 아이템 갯수가 0일 시 1개로 저장
+	if (Item.Amount <= 0) { Item.Amount = 1; }
+
 	if (InventoryList.Num() > 0)
 	{
 		bool IsAddItem = false;
-		for (int32 i = 0; i < InventoryList.Num(); ++i) {
+		for (int32 i = 0; i < InventoryList.Num(); ++i) 
+		{
+			// 같은 아이템이 있는지 검색후 있을 시 갯수만 증가
 			if (InventoryList[i].Name == Item.Name) {
 				InventoryList[i].Amount++;
 				IsAddItem = true;
 				break;
 			}
 		}
+		// 같은 아이템이 없을 시 새로 저장
 		if (!IsAddItem) { InventoryList.Add(Item); }
-	}
-	else {
-		if (Item.Amount <= 0) {
-			Item.Amount = 1;
-		}
+	} else {
 		InventoryList.Add(Item);
 	}
 	
@@ -29,16 +31,15 @@ void UItemManager::GetItem(FItemInfo Item)
 
 UTexture2D* UItemManager::GetItemImage(int Index) const
 {
-	if (InventoryList.Num() > Index)
-		return InventoryList[Index].Image;
-	else
-		return nullptr;
+	return InventoryList.Num() > Index ? InventoryList[Index].Image : nullptr;
 }
 
-int32 UItemManager::GetItemAmount(int Index) const
+FItemInfo UItemManager::GetItemInfo(int Index)
 {
-	if (InventoryList.Num() > Index)
-		return InventoryList[Index].Amount;
-	else
-		return 0;
+	return InventoryList[Index];
+}
+
+int UItemManager::GetInventorySize() const
+{
+	return InventoryList.Num();
 }

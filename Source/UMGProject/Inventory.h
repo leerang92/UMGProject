@@ -62,6 +62,7 @@ protected:
 	// 아이템 슬롯 행과 열을 증가 시키는 함수
 	void IncrementSlotMatrix();
 
+	// 아이템 슬롯들을 배정할 UniformGird
 	UPROPERTY()
 	UUniformGridPanel* ItemGrid;
 
