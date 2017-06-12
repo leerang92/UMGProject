@@ -14,7 +14,7 @@ ABaseItem::ABaseItem()
 	SphereColl->SetSphereRadius(200.0f);
 	RootComponent = SphereColl;
 
-	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Body Static Mesh"));
+	Mesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Skeletal Mesh"));
 	Mesh->AttachTo(SphereColl);
 
 }

@@ -10,6 +10,7 @@ namespace EItemType
 {
 	enum Type
 	{
+		None,
 		Head,
 		Body,
 		Weapon,
@@ -32,4 +33,16 @@ struct FItemInfo
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Info")
 	TEnumAsByte<enum EItemType::Type> ItemType;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Info")
+	UBlueprint* BPClass;
+
+public:
+	FItemInfo() :
+		Name(TEXT("No Item Name")),
+		Amount(1),
+		Image(nullptr),
+		ItemType(EItemType::None),
+		BPClass(nullptr)
+		{}
 };

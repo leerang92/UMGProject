@@ -24,7 +24,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
-	UStaticMeshComponent* Mesh;
+	USkeletalMeshComponent* Mesh;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	USphereComponent* SphereColl;
