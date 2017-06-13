@@ -19,7 +19,7 @@ class UMGPROJECT_API UItemSlot : public UUserWidget
 
 public:
 
-	void NativeConstruct();
+	virtual void NativeConstruct() override;
 
 	// 버튼 스타일 설정
 	void SetButtonStyle(const FButtonStyle& InStyle);

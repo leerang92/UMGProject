@@ -49,7 +49,7 @@ void AUMGProjectCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	Item = NewObject<UItemManager>(this);
-}
+} 
 
 //////////////////////////////////////////////////////////////////////////
 // Input
@@ -80,6 +80,7 @@ void AUMGProjectCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &AUMGProjectCharacter::OnResetVR);
 
 	InputComponent->BindAction("PickUp", IE_Pressed, this, &AUMGProjectCharacter::PickUpItem);
+	InputComponent->BindAction("Inventory", IE_Pressed, this, &AUMGProjectCharacter::ShowInventory);
 }
 
 void AUMGProjectCharacter::OnResetVR()
@@ -124,6 +125,31 @@ void AUMGProjectCharacter::PickUpItem()
 			ItemActor->Destroy();
 		}
 	}
+}
+
+void AUMGProjectCharacter::ShowInventory()
+{
+	if (!Inventroy)
+	{
+		UE_LOG(LogClass, Warning, TEXT("No Inventory Class. Please Select Inventory UI Class"));
+		return;
+	}
+
+	APlayerController* MyController = GetWorld()->GetFirstPlayerController();
+
+	if (!Item->IsInventory) {
+		Item->InventoryRef = CreateWidget<UUserWidget>(GetWorld(), Inventroy);
+		Item->InventoryRef->AddToViewport();
+		Item->IsInventory = true;
+		MyController->bShowMouseCursor = true;
+	}
+	else
+	{
+		Item->InventoryRef->RemoveFromViewport();
+		Item->IsInventory = false;
+		MyController->bShowMouseCursor = false;
+	}
+		
 }
 
 void AUMGProjectCharacter::TurnAtRate(float Rate)

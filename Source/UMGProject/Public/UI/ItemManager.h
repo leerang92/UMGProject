@@ -4,6 +4,7 @@
 
 #include "UObject/NoExportTypes.h"
 #include "ItemInfo.h"
+#include "UserWidget.h"
 #include "ItemManager.generated.h"
 
 /**
@@ -30,6 +31,12 @@ public:
 
 	// 인벤토리 사이즈 반환
 	int GetInventorySize() const;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Item Manager")
+	bool IsInventory;
+
+	UPROPERTY(BlueprintReadWrite)
+	UUserWidget* InventoryRef;
 	 
 protected:
 	// 아이템들을 저장하는 배열

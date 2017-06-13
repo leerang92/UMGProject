@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "UMGProject.h"
+#include "Inventory.h"
 #include "ItemManager.h"
 
 
@@ -26,7 +27,16 @@ void UItemManager::GetItem(FItemInfo Item)
 	} else {
 		InventoryList.Add(Item);
 	}
-	
+
+	if (IsInventory)
+	{
+		UInventory* Inven = Cast<UInventory>(InventoryRef);
+		if (Inven)
+		{
+			Inven->AddSlot();
+		}
+	}
+
 }
 
 UTexture2D* UItemManager::GetItemImage(int Index) const

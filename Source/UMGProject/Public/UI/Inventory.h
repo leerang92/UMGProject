@@ -19,8 +19,10 @@ class UMGPROJECT_API UInventory : public UUserWidget
 	GENERATED_BODY()
 
 public:
-	virtual void PostInitProperties() override;
-	void NativeConstruct();
+	virtual void NativeConstruct() override;
+	//virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
+
+	void AddSlot();
 
 	// 아이템 슬롯 생성
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
@@ -38,6 +40,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 	UTexture2D* SlotImage;
 
+	// 이미지 사이즈
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
+	FVector2D ImageSize;
+
 	// 아이템 슬롯 컬러
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 	FLinearColor SlotColor;
@@ -49,6 +55,8 @@ public:
 	// 행의 갯수
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 	int ColumnLenth;
+	UUserWidget* ItemWidget;
+
 
 protected:
 	// 생성 된 아이템 슬롯을 저장하는 배열

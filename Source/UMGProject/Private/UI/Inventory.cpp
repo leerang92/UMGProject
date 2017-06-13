@@ -5,44 +5,86 @@
 #include "ItemSlot.h"
 #include "Inventory.h"
 
-void UInventory::PostInitProperties()
-{
-	Super::PostInitProperties();
-
-	//CreateItemSlot();
-}
-
 void UInventory::NativeConstruct()
 {
+	Super::NativeConstruct();
+
+	//AUMGProjectCharacter* Character = Cast<AUMGProjectCharacter>(GetOwningPlayerPawn());
+	//if (Character)
+	//{
+	//	Character->Item->IsInventory = true;
+	//}
 	CreateItemSlot();
 }
+//
+//void UInventory::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+//{
+//	Super::NativeTick(MyGeometry, InDeltaTime);
+//
+//	UE_LOG(LogClass, Warning, TEXT("Tick"));
+//	CreateItemSlot();
+//}
 
 void UInventory::CreateItemSlot()
 {
-	if (ItemSlot)
+	if (!ItemSlot)
 	{
-		for (int32 i = 0; i < SlotSize; ++i)
+		UE_LOG(LogClass, Warning, TEXT("No Item Slot Class, Please Select Item Slot UI Class"));
+		return;
+	}
+
+	for (int32 i = 0; i < SlotSize; ++i)
+	{
+		ItemWidget = CreateWidget<UUserWidget>(GetWorld(), ItemSlot);
+		if (ItemWidget)
 		{
-			UUserWidget* ItemWidget = CreateWidget<UUserWidget>(GetWorld(), ItemSlot);
-			if (ItemWidget)
+			// Uniform Gird에 Slot UI(Widget) 클래스 추가
+			AddGridSlot(ItemGrid->AddChildToUniformGrid(ItemWidget));
+
+			UItemSlot* Slot = Cast<UItemSlot>(ItemWidget);
+			AUMGProjectCharacter* Character = Cast<AUMGProjectCharacter>(GetOwningPlayerPawn());
+			if (Slot && Character)
 			{
-				// Uniform Gird에 Slot UI(Widget) 클래스 추가
-				AddGridSlot(ItemGrid->AddChildToUniformGrid(ItemWidget));
+				// 버튼의 아이템 이미지 그리기
+				UTexture2D* ItemImage = Character->Item->GetItemImage(i);
+				Slot->SetButtonStyle(SetStyle(ItemImage));
 
-				UItemSlot* Slot = Cast<UItemSlot>(ItemWidget);
-				AUMGProjectCharacter* Character = Cast<AUMGProjectCharacter>(GetOwningPlayerPawn());
-				if (Slot && Character)
+				// 아이템 슬롯에 아이템 정보 저장
+				if (Character->Item->GetInventorySize() > i)
 				{
-					// 버튼의 아이템 이미지 그리기
-					UTexture2D* ItemImage = Character->Item->GetItemImage(i);
-					Slot->SetButtonStyle(SetStyle(ItemImage));
+					FItemInfo ItemInfo = Character->Item->GetItemInfo(i);
+					Slot->SetItemInfo(ItemInfo);
+				}
+			}
+		}
+	}
+}
 
-					// 아이템 슬롯에 아이템 정보 저장
-					if (Character->Item->GetInventorySize() > i)
-					{
-						FItemInfo ItemInfo = Character->Item->GetItemInfo(i);
-						Slot->SetItemInfo(ItemInfo);
-					}
+void UInventory::AddSlot()
+{
+	Column = 0;
+	Row = 0;
+	for (int32 i = 0; i < SlotSize; ++i)
+	{
+		ItemWidget = CreateWidget<UUserWidget>(GetWorld(), ItemSlot);
+		if (ItemWidget)
+		{
+			// Uniform Gird에 Slot UI(Widget) 클래스 추가
+			AddGridSlot(ItemGrid->AddChildToUniformGrid(ItemWidget));
+
+			UItemSlot* Slot = Cast<UItemSlot>(ItemWidget);
+			AUMGProjectCharacter* Character = Cast<AUMGProjectCharacter>(GetOwningPlayerPawn());
+			if (Slot && Character)
+			{
+				// 버튼의 아이템 이미지 그리기
+				UTexture2D* ItemImage = Character->Item->GetItemImage(i);
+				Slot->SetButtonStyle(SetStyle(ItemImage));
+
+				// 아이템 슬롯에 아이템 정보 저장
+				if (Character->Item->GetInventorySize() > i)
+				{
+					FItemInfo ItemInfo = Character->Item->GetItemInfo(i);
+					Slot->SetItemInfo(ItemInfo);
 				}
 			}
 		}
@@ -53,7 +95,7 @@ FButtonStyle UInventory::SetStyle(UTexture2D* GetImage)
 {
 	FSlateBrush SBrush;
 	// Slate Brush 설정
-	SBrush.ImageSize = FVector2D(32.0f, 32.0f);
+	SBrush.ImageSize = ImageSize;
 	SBrush.TintColor = FLinearColor(0.079f, 0.085f, 0.068f, 1.0f);
 
 	// 받은 이미지가 Null이 아니면 슬롯 이미지로 설정
