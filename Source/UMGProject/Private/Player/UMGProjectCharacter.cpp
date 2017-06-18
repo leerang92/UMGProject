@@ -49,6 +49,10 @@ void AUMGProjectCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	Item = NewObject<UItemManager>(this);
+	if (Item)
+	{
+		Item->Initialize(this);
+	}
 } 
 
 //////////////////////////////////////////////////////////////////////////
@@ -81,6 +85,7 @@ void AUMGProjectCharacter::SetupPlayerInputComponent(class UInputComponent* Play
 
 	InputComponent->BindAction("PickUp", IE_Pressed, this, &AUMGProjectCharacter::PickUpItem);
 	InputComponent->BindAction("Inventory", IE_Pressed, this, &AUMGProjectCharacter::ShowInventory);
+	InputComponent->BindAction("Equipment", IE_Pressed, this, &AUMGProjectCharacter::ShowEquipment);
 }
 
 void AUMGProjectCharacter::OnResetVR()
@@ -100,7 +105,7 @@ void AUMGProjectCharacter::TouchStopped(ETouchIndex::Type FingerIndex, FVector L
 
 void AUMGProjectCharacter::OnOverlapBegin(UPrimitiveComponent * OverlappedComp, AActor * OtherActor, UPrimitiveComponent * OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
-	UE_LOG(LogClass, Warning, TEXT("Get Item0"));
+	/*UE_LOG(LogClass, Warning, TEXT("Get Item0"));
 	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr))
 	{
 		ABaseItem* GetItem = Cast<ABaseItem>(OtherActor);
@@ -111,7 +116,7 @@ void AUMGProjectCharacter::OnOverlapBegin(UPrimitiveComponent * OverlappedComp, 
 			Item->GetItem(GetItem->ItemInfo);
 			
 		}
-	}
+	}*/
 }
 
 void AUMGProjectCharacter::PickUpItem()
@@ -121,8 +126,10 @@ void AUMGProjectCharacter::PickUpItem()
 		ABaseItem* GetItem = Cast<ABaseItem>(ItemActor);
 		if (GetItem) 
 		{
-			Item->GetItem(GetItem->ItemInfo);
+			//UE_LOG(LogClass, Warning, TEXT("%s"), *GetItem->Mesh->GetName());
 			ItemActor->Destroy();
+			//ABaseItem* SpawnItem = GetWorld()->SpawnActor<ABaseItem>((UClass*)GetItem->ItemInfo.BPClass->GeneratedClass, GetActorLocation(), FRotator::ZeroRotator);
+			Item->GetItem(GetItem->ItemInfo);
 		}
 	}
 }
@@ -150,6 +157,27 @@ void AUMGProjectCharacter::ShowInventory()
 		MyController->bShowMouseCursor = false;
 	}
 		
+}
+
+void AUMGProjectCharacter::ShowEquipment()
+{
+	if (!Equipment)
+		return;
+
+	APlayerController* MyController = GetWorld()->GetFirstPlayerController();
+	if (!Item->IsEquipment)
+	{
+		Item->EquipmentRef = CreateWidget<UUserWidget>(GetWorld(), Equipment);
+		Item->EquipmentRef->AddToViewport();
+		Item->IsEquipment = true;
+		MyController->bShowMouseCursor = true;
+	}
+	else
+	{
+		Item->EquipmentRef->RemoveFromViewport();
+		Item->IsEquipment = false;
+		MyController->bShowMouseCursor = false;
+	}
 }
 
 void AUMGProjectCharacter::TurnAtRate(float Rate)

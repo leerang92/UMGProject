@@ -40,7 +40,10 @@ public:
 	AActor* ItemActor;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
-	TSubclassOf <class UUserWidget > Inventroy;
+	TSubclassOf<class UUserWidget> Inventroy;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+	TSubclassOf<class UUserWidget> Equipment;
 
 protected:
 
@@ -76,6 +79,7 @@ protected:
 	void PickUpItem();
 
 	void ShowInventory();
+	void ShowEquipment();
 protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;

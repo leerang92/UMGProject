@@ -22,11 +22,11 @@ public:
 	virtual void NativeConstruct() override;
 	//virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
-	void AddSlot();
-
 	// 아이템 슬롯 생성
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	void CreateItemSlot();
+
+	void AddSlot();
 
 	// 버튼 이미지(스타일) 설정 후 반환
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
@@ -55,9 +55,11 @@ public:
 	// 행의 갯수
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 	int ColumnLenth;
-	UUserWidget* ItemWidget;
+	UPROPERTY()
+	TArray<class UUserWidget*> ItemWidget;
+	//UUserWidget* ItemWidget;
 
-
+	
 protected:
 	// 생성 된 아이템 슬롯을 저장하는 배열
 	UPROPERTY()

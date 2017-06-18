@@ -4,8 +4,10 @@
 
 #include "Blueprint/UserWidget.h"
 #include "Button.h"
+#include "Image.h"
 #include "TextBlock.h"
 #include "ItemInfo.h"
+#include "BaseItem.h"
 #include "TimerManager.h"
 #include "ItemSlot.generated.h"
 
@@ -22,14 +24,17 @@ public:
 	virtual void NativeConstruct() override;
 
 	// 버튼 스타일 설정
-	void SetButtonStyle(const FButtonStyle& InStyle);
+	void SetButtonStyle(const FButtonStyle& InStyle, const int GetAmount);
 
 	// 아이템 정보 저장
-	void SetItemInfo(const FItemInfo& GetItem);
+	void SetItemInfo(FItemInfo GetItem);
 
 	// 클릭
 	UFUNCTION(BlueprintCallable, Category = "Slot Click")
 	void OnClick();
+
+	UPROPERTY(EditAnywhere)
+	UTexture2D* BackgroundImage;
 
 protected:
 	// 버튼 클래스
@@ -38,6 +43,9 @@ protected:
 	// 텍스트 클래스
 	UPROPERTY()
 	UTextBlock* Amount_Text;
+
+	UPROPERTY()
+	UImage* Background;
 
 	// 더블 클릭 대기 타이머핸들
 	FTimerHandle ClickTimer;

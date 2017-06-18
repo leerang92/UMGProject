@@ -46,3 +46,18 @@ public:
 		BPClass(nullptr)
 		{}
 };
+
+USTRUCT(BlueprintType)
+struct FEquipItemInfo
+{
+	GENERATED_USTRUCT_BODY();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Equipment Item Info")
+	FItemInfo Weapon;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Equipment Item Info")
+	FItemInfo Head;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Equipment Item Info")
+	FItemInfo Body;
+};

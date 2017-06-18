@@ -1,6 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "UMGProject.h"
+#include "UMGProjectCharacter.h"
+#include "SlateBrush.h"
 #include "ItemSlot.h"
 
 void UItemSlot::NativeConstruct()
@@ -12,20 +14,27 @@ void UItemSlot::NativeConstruct()
 	{
 		Slot_Button->OnClicked.AddDynamic(this, &UItemSlot::OnClick);
 	}
+
+	FSlateBrush Brush;
+	Brush.TintColor = FLinearColor(0.079f, 0.085f, 0.068f, 1.0f);
+	Brush.SetResourceObject(BackgroundImage);
+	Background->SetBrush(Brush);
 }
 
-void UItemSlot::SetButtonStyle(const FButtonStyle& InStyle)
+void UItemSlot::SetButtonStyle(const FButtonStyle& InStyle, const int GetAmount)
 {
 	if (Slot_Button) {
 		Slot_Button->SetStyle(InStyle);
+		if (GetAmount > 0)
+			Amount_Text->SetText(FText::AsNumber(GetAmount));
+		else
+			Amount_Text->SetText(FText::GetEmpty());
 	}
 }
 
-void UItemSlot::SetItemInfo(const FItemInfo& GetItem)
+void UItemSlot::SetItemInfo(FItemInfo GetItem)
 {
 	ItemInfo = GetItem;
-	if (ItemInfo.Amount > 0)
-		Amount_Text->SetText(FText::AsNumber(ItemInfo.Amount));
 }
 
 void UItemSlot::OnClick()
@@ -51,7 +60,16 @@ void UItemSlot::OnClick()
 
 void UItemSlot::OnDoubleClick()
 {
-	UE_LOG(LogClass, Warning, TEXT("%s"), *ItemInfo.Name.ToString());
+	AUMGProjectCharacter* Character = Cast<AUMGProjectCharacter>(GetOwningPlayerPawn());
+	if (Character && ItemInfo.BPClass != nullptr)
+	{
+		ItemInfo.Amount--;
+		Character->Item->EquipItem(ItemInfo);
+		
+		//if (ItemInfo.Amount <= 0) { 
+		//	FMemory::Memset(ItemInfo, 0);
+		//}
+	}
 }
 
 void UItemSlot::ClickReset()
