@@ -3,6 +3,7 @@
 #include "GameFramework/Character.h"
 #include "ItemManager.h"
 #include "UserWidget.h"
+#include "EquiptCharacter.h"
 #include "UMGProjectCharacter.generated.h"
 
 UCLASS(config=Game)
@@ -45,7 +46,14 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 	TSubclassOf<class UUserWidget> Equipment;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+	TSubclassOf<class UUserWidget> ItemInfo;
+
+	UPROPERTY()
+	AEquiptCharacter* EquipCharacter;
+
 protected:
+	TSubclassOf<class AEquiptCharacter> CharacterClass;
 
 	/** Resets HMD orientation in VR. */
 	void OnResetVR();

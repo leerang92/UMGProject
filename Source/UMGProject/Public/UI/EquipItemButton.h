@@ -14,10 +14,13 @@ class UMGPROJECT_API UEquipItemButton : public UButton
 {
 	GENERATED_BODY()
 	
-	
 public:
 	FItemInfo ItemInfo;
 
+	// æ∆æ∆≈€ ΩΩ∑‘ º≥¡§
 	void SetButton(FItemInfo GetItem);
+
+	// ∫Û ΩΩ∑‘ º≥¡§
+	void SetEmptyButton(UTexture* EmptyImage);
 	
 };

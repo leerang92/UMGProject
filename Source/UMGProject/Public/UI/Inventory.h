@@ -26,11 +26,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
 	void CreateItemSlot();
 
-	void AddSlot();
-
-	// 버튼 이미지(스타일) 설정 후 반환
-	UFUNCTION(BlueprintCallable, Category = "Inventory")
-	FButtonStyle SetStyle(UTexture2D* GetImage);
+	void RenewSlot();
 
 	// 아이템 슬롯 클래스
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widgets")
@@ -55,25 +51,27 @@ public:
 	// 행의 갯수
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 	int ColumnLenth;
-	UPROPERTY()
-	TArray<class UUserWidget*> ItemWidget;
-	//UUserWidget* ItemWidget;
-
 	
 protected:
 	// 생성 된 아이템 슬롯을 저장하는 배열
 	UPROPERTY()
-	TArray<UUserWidget*> ItemSlotList;
-
-	// 아이템 슬롯을 UI Grid에 추가
-	void AddGridSlot(UUniformGridSlot* GridSlot);
-
-	// 아이템 슬롯 행과 열을 증가 시키는 함수
-	void IncrementSlotMatrix();
+	TArray<class UItemSlot*> ItemSlotList;
 
 	// 아이템 슬롯들을 배정할 UniformGird
 	UPROPERTY()
 	UUniformGridPanel* ItemGrid;
+
+	// 버튼 이미지(스타일) 설정 후 반환
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
+	FButtonStyle SetStyle(UTexture2D* GetImage);
+
+	// 아이템 슬롯을 UI Grid에 추가
+	void AddGridSlot(UUniformGridSlot* GridSlot);
+
+	void BindButtonEvent(UItemSlot* Slot);
+
+	// 아이템 슬롯 행과 열을 증가 시키는 함수
+	void IncrementSlotMatrix();
 
 private:
 	// 행과 열

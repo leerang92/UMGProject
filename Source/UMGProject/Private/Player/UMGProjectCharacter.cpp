@@ -42,6 +42,9 @@ AUMGProjectCharacter::AUMGProjectCharacter()
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
+
+	ConstructorHelpers::FObjectFinder<UBlueprint> BP_Character(TEXT("Blueprint'/Game/Blueprints/EquipmentSetting/BP_EquiptCharacter.BP_EquiptCharacter'"));
+	CharacterClass = BP_Character.Object->GeneratedClass;
 }
 
 void AUMGProjectCharacter::BeginPlay()
@@ -53,6 +56,8 @@ void AUMGProjectCharacter::BeginPlay()
 	{
 		Item->Initialize(this);
 	}
+	EquipCharacter = GetWorld()->SpawnActor<AEquiptCharacter>(CharacterClass, FVector(-6883720.0f, -2559040.0f, -1614690.0f), FRotator::ZeroRotator);
+	
 } 
 
 //////////////////////////////////////////////////////////////////////////
@@ -129,7 +134,7 @@ void AUMGProjectCharacter::PickUpItem()
 			//UE_LOG(LogClass, Warning, TEXT("%s"), *GetItem->Mesh->GetName());
 			ItemActor->Destroy();
 			//ABaseItem* SpawnItem = GetWorld()->SpawnActor<ABaseItem>((UClass*)GetItem->ItemInfo.BPClass->GeneratedClass, GetActorLocation(), FRotator::ZeroRotator);
-			Item->GetItem(GetItem->ItemInfo);
+			Item->AddItem(GetItem->ItemInfo);
 		}
 	}
 }
@@ -138,7 +143,7 @@ void AUMGProjectCharacter::ShowInventory()
 {
 	if (!Inventroy)
 	{
-		UE_LOG(LogClass, Warning, TEXT("No Inventory Class. Please Select Inventory UI Class"));
+		UE_LOG(LogClass, Warning, TEXT("인벤토리 클래스가 없습니다."));
 		return;
 	}
 
@@ -162,7 +167,10 @@ void AUMGProjectCharacter::ShowInventory()
 void AUMGProjectCharacter::ShowEquipment()
 {
 	if (!Equipment)
+	{
+		UE_LOG(LogClass, Warning, TEXT("Equipment 클래스가 없습니다."));
 		return;
+	}
 
 	APlayerController* MyController = GetWorld()->GetFirstPlayerController();
 	if (!Item->IsEquipment)

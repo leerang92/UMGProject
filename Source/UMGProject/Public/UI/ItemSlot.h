@@ -20,7 +20,6 @@ class UMGPROJECT_API UItemSlot : public UUserWidget
 	GENERATED_BODY()
 
 public:
-
 	virtual void NativeConstruct() override;
 
 	// 버튼 스타일 설정
@@ -33,29 +32,35 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Slot Click")
 	void OnClick();
 
+	void ShowItemInfo();
+
 	UPROPERTY(EditAnywhere)
 	UTexture2D* BackgroundImage;
 
-protected:
 	// 버튼 클래스
 	UPROPERTY()
 	UButton* Slot_Button;
+
+protected:
+
 	// 텍스트 클래스
 	UPROPERTY()
 	UTextBlock* Amount_Text;
 
+	// 배경 이미지
 	UPROPERTY()
 	UImage* Background;
 
+	UPROPERTY()
+	UWorld* World;
+
 	// 더블 클릭 대기 타이머핸들
-	FTimerHandle ClickTimer;
+	FTimerHandle ClickTimerHandle;
 	
 	// 현재 가지고 있어야 할 아이템 정보
 	FItemInfo ItemInfo;
-	
-	// 더블 클릭 여부
-	bool IsDoubleClick;
 
+	// 클릭 횟수
 	int ClickCount;
 
 	// 더블 클릭 시 실행할 함수

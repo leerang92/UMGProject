@@ -16,64 +16,60 @@ void UInventory::CreateItemSlot()
 {
 	if (!ItemSlot)
 	{
-		UE_LOG(LogClass, Warning, TEXT("No Item Slot Class, Please Select Item Slot UI Class"));
+		UE_LOG(LogClass, Warning, TEXT("아이템 슬롯 클래스가 없습니다."));
 		return;
 	}
+
 	for (int32 i = 0; i < SlotSize; ++i)
 	{
-		ItemWidget.Add(CreateWidget<UUserWidget>(GetWorld(), ItemSlot));
-		if (ItemWidget[i])
+		// 슬롯 생성 후 배열에 저장 
+		UUserWidget* Widget = CreateWidget<UUserWidget>(GetWorld(), ItemSlot);
+		if (Widget)
 		{
 			// Uniform Gird에 Slot UI(Widget) 클래스 추가
-			AddGridSlot(ItemGrid->AddChildToUniformGrid(ItemWidget[i]));
+			AddGridSlot(ItemGrid->AddChildToUniformGrid(Widget));
 
-			UItemSlot* Slot = Cast<UItemSlot>(ItemWidget[i]);
+			// 아이템 슬롯 설정
+			ItemSlotList.Add(Cast<UItemSlot>(Widget));
 			AUMGProjectCharacter* Character = Cast<AUMGProjectCharacter>(GetOwningPlayerPawn());
-			if (Slot && Character)
+			if (ItemSlotList[i] && Character)
 			{
 				// 버튼의 아이템 이미지 그리기
 				UTexture2D* ItemImage = Character->Item->GetItemImage(i);
 				const int Amount = Character->Item->GetItemAmount(i);
-				Slot->SetButtonStyle(SetStyle(ItemImage), Amount);
+				// 슬롯 스타일 설정
+				ItemSlotList[i]->SetButtonStyle(SetStyle(ItemImage), Amount);
 
 				// 아이템 슬롯에 아이템 정보 저장
 				if (Character->Item->GetInventorySize() > i)
 				{
-					Slot->SetItemInfo(Character->Item->GetItemInfo(i));
+					ItemSlotList[i]->SetItemInfo(Character->Item->GetItemInfo(i));
+					BindButtonEvent(ItemSlotList[i]);
 				}
 			}
 		}
 	}
 }
 
-void UInventory::AddSlot()
+void UInventory::RenewSlot()
 {
 	Column = 0;
 	Row = 0;
 	for (int32 i = 0; i < SlotSize; ++i)
 	{
-		if (ItemWidget[i])
+		AUMGProjectCharacter* Character = Cast<AUMGProjectCharacter>(GetOwningPlayerPawn());
+		if (ItemSlotList[i] && Character)
 		{
-			// Uniform Gird에 Slot UI(Widget) 클래스 추가
-			class UUserWidget* Widget = ItemWidget[i];
-			ItemGrid->RemoveChild(Widget);
-			AddGridSlot(ItemGrid->AddChildToUniformGrid(Widget));
+			// 버튼의 아이템 이미지 그리기
+			UTexture2D* ItemImage = Character->Item->GetItemImage(i);
+			const int Amount = Character->Item->GetItemAmount(i);
+			ItemSlotList[i]->SetButtonStyle(SetStyle(ItemImage), Amount);
 
-			UItemSlot* Slot = Cast<UItemSlot>(ItemWidget[i]);
-			AUMGProjectCharacter* Character = Cast<AUMGProjectCharacter>(GetOwningPlayerPawn());
-			if (Slot && Character)
+			// 아이템 슬롯에 아이템 정보 저장
+			if (Character->Item->GetInventorySize() > i)
 			{
-				// 버튼의 아이템 이미지 그리기
-				UTexture2D* ItemImage = Character->Item->GetItemImage(i);
-				const int Amount = Character->Item->GetItemAmount(i);
-				Slot->SetButtonStyle(SetStyle(ItemImage), Amount);
-
-				// 아이템 슬롯에 아이템 정보 저장
-				if (Character->Item->GetInventorySize() > i)
-				{
-					Slot->SetItemInfo(Character->Item->GetItemInfo(i));
-
-				}
+				ItemSlotList[i]->SetItemInfo(Character->Item->GetItemInfo(i));
+				BindButtonEvent(ItemSlotList[i]);
 			}
 		}
 	}
@@ -114,6 +110,12 @@ void UInventory::AddGridSlot(UUniformGridSlot* GridSlot)
 
 	// 행렬을 증가 시킨다
 	IncrementSlotMatrix();
+}
+
+void UInventory::BindButtonEvent(UItemSlot* Slot)
+{
+	Slot->Slot_Button->OnClicked.AddDynamic(Slot, &UItemSlot::OnClick);
+	Slot->Slot_Button->OnHovered.AddDynamic(Slot, &UItemSlot::ShowItemInfo);
 }
 
 void UInventory::IncrementSlotMatrix()
