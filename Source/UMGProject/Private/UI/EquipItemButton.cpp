@@ -12,6 +12,7 @@ void UEquipItemButton::SetButton(FItemInfo GetItem)
 	Brush.SetResourceObject(GetItem.Image);
 
 	FButtonStyle BtnStyle;
+	Brush.ImageSize = FVector2D(80.0f, 80.0f);
 	BtnStyle.SetNormal(Brush);
 
 	Brush.TintColor = FLinearColor(0.079f, 0.085f, 0.068f, 1.0f);
@@ -29,6 +30,7 @@ void UEquipItemButton::SetEmptyButton(UTexture * EmptyImage)
 	Brush.SetResourceObject(EmptyImage);
 
 	FButtonStyle BtnStyle;
+	Brush.ImageSize = FVector2D(80.0f, 80.0f);
 	BtnStyle.SetNormal(Brush);
 
 	Brush.TintColor = FLinearColor(0.079f, 0.085f, 0.068f, 1.0f);
