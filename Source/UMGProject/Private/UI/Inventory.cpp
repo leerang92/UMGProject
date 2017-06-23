@@ -115,7 +115,7 @@ void UInventory::AddGridSlot(UUniformGridSlot* GridSlot)
 void UInventory::BindButtonEvent(UItemSlot* Slot)
 {
 	Slot->Slot_Button->OnClicked.AddDynamic(Slot, &UItemSlot::OnClick);
-	Slot->Slot_Button->OnHovered.AddDynamic(Slot, &UItemSlot::ShowItemInfo);
+	//Slot->Slot_Button->OnHovered.AddDynamic(Slot, &UItemSlot::ShowItemTooltip);
 }
 
 void UInventory::IncrementSlotMatrix()

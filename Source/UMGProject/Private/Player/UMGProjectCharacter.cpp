@@ -43,7 +43,7 @@ AUMGProjectCharacter::AUMGProjectCharacter()
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
 
-	ConstructorHelpers::FObjectFinder<UBlueprint> BP_Character(TEXT("Blueprint'/Game/Blueprints/EquipmentSetting/BP_EquiptCharacter.BP_EquiptCharacter'"));
+	static ConstructorHelpers::FObjectFinder<UBlueprint> BP_Character(TEXT("Blueprint'/Game/Blueprints/EquipmentSetting/BP_EquiptCharacter.BP_EquiptCharacter'"));
 	CharacterClass = BP_Character.Object->GeneratedClass;
 }
 
@@ -146,10 +146,11 @@ void AUMGProjectCharacter::ShowInventory()
 		UE_LOG(LogClass, Warning, TEXT("인벤토리 클래스가 없습니다."));
 		return;
 	}
-
+	
 	APlayerController* MyController = GetWorld()->GetFirstPlayerController();
 
 	if (!Item->IsInventory) {
+		//Item->ShowItemToltip();
 		Item->InventoryRef = CreateWidget<UUserWidget>(GetWorld(), Inventroy);
 		Item->InventoryRef->AddToViewport();
 		Item->IsInventory = true;

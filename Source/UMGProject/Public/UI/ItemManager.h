@@ -19,6 +19,8 @@ class UMGPROJECT_API UItemManager : public UObject
 	
 public:
 
+	UItemManager();
+
 	void Initialize(APawn* pOwnerPawn);
 
 	// 아이템 습득
@@ -52,6 +54,9 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	UUserWidget* EquipmentRef;
 
+	UPROPERTY()
+	UUserWidget* TooltipRef;
+
 protected:
 	// 아이템들을 저장하는 배열
 	TArray<FItemInfo> InventoryList;
@@ -70,6 +75,9 @@ protected:
 	// 플레이어 폰
 	UPROPERTY()
 	APawn* OwnerPawn;
+
+	UPROPERTY()
+	class UUserWidget* Tooltip;
 
 	// 무기 아이템 장착
 	void SetWeapon(FItemInfo GetItem);

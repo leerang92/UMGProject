@@ -36,6 +36,5 @@ void UEquipItemButton::SetEmptyButton(UTexture * EmptyImage)
 	Brush.TintColor = FLinearColor(0.079f, 0.085f, 0.068f, 1.0f);
 	BtnStyle.SetHovered(Brush);
 	BtnStyle.SetPressed(Brush);
-
 	this->SetStyle(BtnStyle);
 }

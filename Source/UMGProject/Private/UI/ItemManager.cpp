@@ -6,6 +6,11 @@
 #include "UMGProjectCharacter.h"
 #include "ItemManager.h"
 
+UItemManager::UItemManager()
+{
+	UE_LOG(LogClass, Warning, TEXT("Constructor"));
+}
+
 void UItemManager::Initialize(APawn* pOwnerPawn)
 {
 	OwnerPawn = pOwnerPawn;

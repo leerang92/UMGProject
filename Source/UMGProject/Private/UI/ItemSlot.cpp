@@ -41,27 +41,47 @@ void UItemSlot::OnClick()
 	if (World) {
 		// 한번 클릭
 		ClickCount++;
-		if (ClickCount == 1)
-		{
-			// 더블 클릭까지의 대기시간
-			World->GetTimerManager().SetTimer(ClickTimerHandle, this, &UItemSlot::ClickReset, 0.3f, false);
-		}
 		// 더블 클릭
-		else if (ClickCount >= 2)
+		if (ClickCount >= 2)
 		{
 			OnDoubleClick();
 			ClickReset();
 		}
+		else if (ClickCount == 1)
+		{
+			// 더블 클릭까지의 대기시간
+			World->GetTimerManager().SetTimer(ClickTimerHandle, this, &UItemSlot::ClickReset, 0.3f, false);
+		}
 	}
 }
 
-void UItemSlot::ShowItemInfo()
+void UItemSlot::ShowTooltip()
 {
-	UE_LOG(LogClass, Warning, TEXT("Hovered"));
-	//AUMGProjectCharacter* Character = Cast<AUMGProjectCharacter>(GetOwningPlayerPawn());
-	//UUserWidget* InfoWidget = CreateWidget<UUserWidget>(Character->GetWorld(), Character->ItemInfo);
-	//InfoWidget->AddToViewport();
-	//InfoWidget->SetPositionInViewport(FVector2D(0,0));
+	AUMGProjectCharacter* Character = Cast<AUMGProjectCharacter>(GetOwningPlayerPawn());
+	if (Character)
+	{
+		Tooltip = CreateWidget<UUserWidget>(Character->GetWorld(), Character->Tolltip);
+		Tooltip->AddToViewport();
+
+		if (Tooltip)
+		{
+			float LocationX;
+			float LocationY;
+
+			APlayerController* MyController = Character->GetWorld()->GetFirstPlayerController();
+			MyController->GetMousePosition(LocationX, LocationY);
+			const FVector2D MousePosition = FVector2D(LocationX, LocationY);
+			Tooltip->SetPositionInViewport(MousePosition);
+		}
+	}
+}
+
+void UItemSlot::RemoveTooltip()
+{
+	if (Tooltip)
+	{
+		Tooltip->RemoveFromViewport();
+	}
 }
 
 void UItemSlot::OnDoubleClick()

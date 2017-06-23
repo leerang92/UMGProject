@@ -32,7 +32,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Slot Click")
 	void OnClick();
 
-	void ShowItemInfo();
+	UFUNCTION(BlueprintCallable, Category = "Tooltip")
+	void ShowTooltip();
+	UFUNCTION(BlueprintCallable, Category = "Tooltip")
+	void RemoveTooltip();
 
 	UPROPERTY(EditAnywhere)
 	UTexture2D* BackgroundImage;
@@ -42,6 +45,8 @@ public:
 	UButton* Slot_Button;
 
 protected:
+	UPROPERTY()
+	UUserWidget* Tooltip;
 
 	// 텍스트 클래스
 	UPROPERTY()

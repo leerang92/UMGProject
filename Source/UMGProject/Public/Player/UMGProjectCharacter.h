@@ -47,7 +47,7 @@ public:
 	TSubclassOf<class UUserWidget> Equipment;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
-	TSubclassOf<class UUserWidget> ItemInfo;
+	TSubclassOf<class UUserWidget> Tolltip;
 
 	UPROPERTY()
 	AEquiptCharacter* EquipCharacter;
