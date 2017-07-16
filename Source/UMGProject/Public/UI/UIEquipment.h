@@ -6,7 +6,8 @@
 #include "ItemInfo.h"
 #include "Image.h"
 #include "SlateBrush.h"
-#include "EquipItemButton.h"
+#include "ItemButton.h"
+#include "UITooltip.h"
 #include "UIEquipment.generated.h"
 
 /**
@@ -23,18 +24,28 @@ public:
 
 	void SetSlot();
 
+	UFUNCTION(BlueprintCallable, Category = "Tooltip")
+	void ShowTooltip(const FItemInfo& Item);
+	
+	UFUNCTION(BlueprintCallable, Category = "Tooltip")
+	void RemoveTooltip();
+
 	FSlateBrush SetBackgroundStyle();
+
+	UPROPERTY(BlueprintReadOnly, Category = "Item Slot")
+	UItemButton* WeaponSlot;
+	UPROPERTY(BlueprintReadOnly, Category = "Item Slot")
+		UUserWidget* Tooltip;
+protected:
+	
 
 	UPROPERTY(EditAnywhere)
 	UTexture2D* BackgroundImage;
 
 	UPROPERTY()
 	UImage* WeaponBackground;
-	UPROPERTY()
-	UEquipItemButton* WeaponSlot;
 
-protected:
-
+	
 	
 	
 };

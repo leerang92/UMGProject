@@ -32,6 +32,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Slot Click")
 	void OnClick();
 
+	void HoveredTest();
+
 	UFUNCTION(BlueprintCallable, Category = "Tooltip")
 	void ShowTooltip();
 	UFUNCTION(BlueprintCallable, Category = "Tooltip")
@@ -43,6 +45,10 @@ public:
 	// 버튼 클래스
 	UPROPERTY()
 	UButton* Slot_Button;
+
+	// 현재 가지고 있어야 할 아이템 정보
+	UPROPERTY(BlueprintReadOnly, Category = "Item Info")
+		FItemInfo ItemInfo;
 
 protected:
 	UPROPERTY()
@@ -62,8 +68,7 @@ protected:
 	// 더블 클릭 대기 타이머핸들
 	FTimerHandle ClickTimerHandle;
 	
-	// 현재 가지고 있어야 할 아이템 정보
-	FItemInfo ItemInfo;
+
 
 	// 클릭 횟수
 	int ClickCount;

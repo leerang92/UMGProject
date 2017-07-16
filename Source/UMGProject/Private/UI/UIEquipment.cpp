@@ -11,7 +11,42 @@ void UUIEquipment::NativeConstruct()
 	Super::NativeConstruct();
 
 	SetSlot();
+}
 
+void UUIEquipment::ShowTooltip(const FItemInfo& Item)
+{
+	if (Item.Image == nullptr)
+		return;
+
+	AUMGProjectCharacter* Character = Cast<AUMGProjectCharacter>(GetOwningPlayerPawn());
+	if (Character)
+	{
+		Tooltip = CreateWidget<UUserWidget>(Character->GetWorld(), Character->Tolltip);
+		Tooltip->AddToViewport();
+
+		if (Tooltip)
+		{
+			UUITooltip* TooltipClass = Cast<UUITooltip>(Tooltip);
+			TooltipClass->GetItemInfo(Item);
+			
+			FVector2D MousePosition = FVector2D::ZeroVector;
+
+			APlayerController* Controller = Character->GetWorld()->GetFirstPlayerController();
+			Controller->GetMousePosition(MousePosition.X, MousePosition.Y);
+
+			FAnchors Anchors(0,0,1,1);		
+			Tooltip->SetAnchorsInViewport(Anchors);
+			Tooltip->SetPositionInViewport(MousePosition);
+		}
+	}
+}
+
+void UUIEquipment::RemoveTooltip()
+{
+	if (Tooltip)
+	{
+		Tooltip->RemoveFromViewport();
+	}
 }
 
 FSlateBrush UUIEquipment::SetBackgroundStyle()
@@ -30,11 +65,8 @@ void UUIEquipment::SetSlot()
 	if (Character)
 	{
 		//WeaponBackground->SetBrush(SetBackgroundStyle());
-		const FEquipItemInfo ItemInfo = Character->Item->GetEquipItemInfo();
+		const FEquipItemInfo EquipItemInfo = Character->Item->GetEquipItemInfo();
 
-		if (ItemInfo.Weapon.Image != nullptr) 
-			WeaponSlot->SetButton(ItemInfo.Weapon);
-		else
-			WeaponSlot->SetEmptyButton(BackgroundImage);
+		WeaponSlot->SetButton(EquipItemInfo.Weapon);
 	}
 }

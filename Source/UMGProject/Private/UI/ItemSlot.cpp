@@ -3,6 +3,7 @@
 #include "UMGProject.h"
 #include "UMGProjectCharacter.h"
 #include "SlateBrush.h"
+#include "UITooltip.h"
 #include "ItemSlot.h"
 
 
@@ -18,6 +19,8 @@ void UItemSlot::NativeConstruct()
 	Brush.TintColor = FLinearColor(0.079f, 0.085f, 0.068f, 1.0f);
 	Brush.SetResourceObject(BackgroundImage);
 	Background->SetBrush(Brush);
+
+	//Slot_Button->OnHovered.AddDynamic(this, &UItemSlot::HoveredTest);
 }
 
 void UItemSlot::SetButtonStyle(const FButtonStyle& InStyle, const int GetAmount)
@@ -29,6 +32,11 @@ void UItemSlot::SetButtonStyle(const FButtonStyle& InStyle, const int GetAmount)
 		else
 			Amount_Text->SetText(FText::GetEmpty());
 	}
+}
+
+void UItemSlot::HoveredTest()
+{
+	UE_LOG(LogClass, Warning, TEXT("On Hovered"));
 }
 
 void UItemSlot::SetItemInfo(FItemInfo GetItem)
@@ -57,6 +65,10 @@ void UItemSlot::OnClick()
 
 void UItemSlot::ShowTooltip()
 {
+	if (ItemInfo.Image == nullptr)
+	{
+		return;
+	}
 	AUMGProjectCharacter* Character = Cast<AUMGProjectCharacter>(GetOwningPlayerPawn());
 	if (Character)
 	{
@@ -65,6 +77,9 @@ void UItemSlot::ShowTooltip()
 
 		if (Tooltip)
 		{
+			UUITooltip* TooltipClass = Cast<UUITooltip>(Tooltip);
+			TooltipClass->GetItemInfo(ItemInfo);
+
 			float LocationX;
 			float LocationY;
 

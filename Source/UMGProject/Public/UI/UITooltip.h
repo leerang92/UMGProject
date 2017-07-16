@@ -18,7 +18,7 @@ class UMGPROJECT_API UUITooltip : public UUserWidget
 	GENERATED_BODY()
 
 public:
-	void GetItemInfo(FItemInfo GetItem);
+	void GetItemInfo(const FItemInfo& GetItem);
 protected:
 	UPROPERTY()
 	UImage* ItemImage;

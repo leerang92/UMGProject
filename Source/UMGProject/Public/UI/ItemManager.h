@@ -38,6 +38,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Item Manager")
 	UTexture2D* GetItemImage(int Index) const;
 
+	UFUNCTION(BlueprintCallable, Category = "Tooltip")
+	void CreateTooltip(const FItemInfo& Item);
+
+	UFUNCTION(BlueprintCallable, Category = "Tooltip")
+	void Remove();
+
 	// 현재 인벤토리 UI 생성 여부
 	UPROPERTY(BlueprintReadOnly, Category = "Item Manager")
 	bool IsInventory;
@@ -87,6 +93,7 @@ protected:
 
 	// UI 갱신
 	void RenewUI();
+	void EquipmentRenew();
 
 	// 장비 UI에 표시할 캐릭터 세팅
 	void SetEquipUICharacter(FItemInfo GetItem);

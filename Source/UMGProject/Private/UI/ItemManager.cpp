@@ -42,6 +42,7 @@ void UItemManager::AddItem(FItemInfo Item)
 
 	// UI 갱신
 	RenewUI();
+
 }
 
 void UItemManager::SetEquipItem(FItemInfo GetItem)
@@ -103,7 +104,7 @@ void UItemManager::MinusItemAmount(const FItemInfo & GetItem)
 void UItemManager::RenewUI()
 {
 	// 인벤토리 열려있을 시 갱신
-	if (IsInventory)
+	if (InventoryRef && InventoryRef->IsInViewport())
 	{
 		UInventory* Inven = Cast<UInventory>(InventoryRef);
 		if (Inven)
@@ -112,7 +113,7 @@ void UItemManager::RenewUI()
 		}
 	}
 	// 장비 UI 열려있을 시 갱신
-	if (IsEquipment)
+	if (EquipmentRef && EquipmentRef->IsInViewport())
 	{
 		UUIEquipment* EquipUI = Cast<UUIEquipment>(EquipmentRef);
 		if (EquipUI)
@@ -135,6 +136,7 @@ void UItemManager::SetEquipUICharacter(FItemInfo GetItem)
 			EquipWeaponItem->Destroy();
 		}
 
+		// 장착 아이템을 장비UI 캐릭터의 부착
 		EquipWeaponItem = World->SpawnActor<ABaseItem>((UClass*)GetItem.BPClass->GeneratedClass);
 		if (EquipWeaponItem)
 		{
@@ -146,6 +148,39 @@ void UItemManager::SetEquipUICharacter(FItemInfo GetItem)
 UTexture2D * UItemManager::GetItemImage(int Index) const
 {
 	return InventoryList.Num() > Index ? InventoryList[Index].Image : nullptr;
+}
+
+void UItemManager::CreateTooltip(const FItemInfo & Item)
+{
+	if (Item.Image == nullptr)
+		return;
+	if (Tooltip)
+		Tooltip->RemoveFromViewport();
+	
+	AUMGProjectCharacter* Character = Cast<AUMGProjectCharacter>(OwnerPawn);
+	if (Character)
+	{
+		Tooltip = CreateWidget<UUserWidget>(Character->GetWorld(), Character->Tolltip);
+		
+		if (Tooltip) 
+		{
+			UUITooltip* TC = Cast<UUITooltip>(Tooltip);
+			TC->GetItemInfo(Item);
+
+			FVector2D MousePosition = FVector2D::ZeroVector;
+			APlayerController* Controller = Character->GetWorld()->GetFirstPlayerController();
+			Controller->GetMousePosition(MousePosition.X, MousePosition.Y);
+			Tooltip->SetPositionInViewport(MousePosition);
+
+			Tooltip->AddToViewport();
+		}
+	}
+}
+
+void UItemManager::Remove()
+{
+	if (Tooltip)
+		Tooltip->RemoveFromViewport();
 }
 
 int UItemManager::GetItemAmount(int Index) const
