@@ -54,7 +54,7 @@ void AUMGProjectCharacter::BeginPlay()
 	Item = NewObject<UItemManager>(this);
 	if (Item)
 	{
-		Item->Initialize(this);
+		Item->SetOwnerPawn(this);
 	}
 	EquipCharacter = GetWorld()->SpawnActor<AEquiptCharacter>(CharacterClass, FVector(-6883720.0f, -2559040.0f, -1614690.0f), FRotator::ZeroRotator);
 	

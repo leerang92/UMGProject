@@ -21,8 +21,6 @@ public:
 
 	UItemManager();
 
-	void Initialize(APawn* pOwnerPawn);
-
 	// 아이템 습득
 	UFUNCTION(BlueprintCallable, Category = "Item Manager")
 	void AddItem(FItemInfo Item);
@@ -38,53 +36,31 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Item Manager")
 	UTexture2D* GetItemImage(int Index) const;
 
+	// 툴팁 생성
 	UFUNCTION(BlueprintCallable, Category = "Tooltip")
 	void CreateTooltip(const FItemInfo& Item);
 
+	// UI 제거
 	UFUNCTION(BlueprintCallable, Category = "Tooltip")
-	void Remove();
+	void RemoveTooltip();
+	
+	// 캐릭터 클래스 세팅
+	void SetOwnerPawn(APawn* OwnerPawn);
 
-	// 현재 인벤토리 UI 생성 여부
-	UPROPERTY(BlueprintReadOnly, Category = "Item Manager")
-	bool IsInventory;
+	// 캐릭터 클래스 반환
+	FORCEINLINE class AUMGProjectCharacter* GetOwnerPawn() const { return MyPawn; }
 
-	// 현재 장비 UI 생성 여부
-	UPROPERTY(BlueprintReadOnly, Category = "Item Manager")
-	bool IsEquipment;
+	// 인벤토리 사이즈 반환
+	FORCEINLINE int GetInventorySize() const { return InventoryList.Num(); }
 
-	// 인벤토리 UI 레퍼런스
-	UPROPERTY(BlueprintReadWrite)
-	UUserWidget* InventoryRef;
+	// 아이템 정보 반환
+	UFUNCTION(BlueprintCallable, Category = "Item Manager")
+	FORCEINLINE FItemInfo GetItemInfo(int Index) { return InventoryList[Index]; }
 
-	// 장비 UI 레퍼런스
-	UPROPERTY(BlueprintReadWrite)
-	UUserWidget* EquipmentRef;
-
-	UPROPERTY()
-	UUserWidget* TooltipRef;
+	// 장착 아이템 정보 반환
+	FORCEINLINE FEquipItemInfo GetEquipItemInfo() { return EquipItemInfo; }
 
 protected:
-	// 아이템들을 저장하는 배열
-	TArray<FItemInfo> InventoryList;
-
-	// 장착 아이템 정보
-	FEquipItemInfo EquipItemInfo;
-
-	// 무기 클래스
-	UPROPERTY()
-	ABaseItem* WeaponItem;
-
-	// 장비창에 표시할 무기 클래스
-	UPROPERTY()
-	ABaseItem* EquipWeaponItem;
-
-	// 플레이어 폰
-	UPROPERTY()
-	APawn* OwnerPawn;
-
-	UPROPERTY()
-	class UUserWidget* Tooltip;
-
 	// 무기 아이템 장착
 	void SetWeapon(FItemInfo GetItem);
 
@@ -99,14 +75,44 @@ protected:
 	void SetEquipUICharacter(FItemInfo GetItem);
 
 public:
+	// 현재 인벤토리 UI 생성 여부
+	UPROPERTY(BlueprintReadOnly, Category = "Item Manager")
+	bool IsInventory;
 
-	// 인벤토리 사이즈 반환
-	FORCEINLINE int GetInventorySize() const { return InventoryList.Num(); }
+	// 현재 장비 UI 생성 여부
+	UPROPERTY(BlueprintReadOnly, Category = "Item Manager")
+	bool IsEquipment;
 
-	// 아이템 정보 반환
-	UFUNCTION(BlueprintCallable, Category = "Item Manager")
-	FORCEINLINE FItemInfo GetItemInfo(int Index) { return InventoryList[Index]; }
+	// 인벤토리 UI 참조자
+	UPROPERTY(BlueprintReadWrite)
+	class UUserWidget* InventoryRef;
 
-	// 장착 아이템 정보 반환
-	FORCEINLINE FEquipItemInfo GetEquipItemInfo()  { return EquipItemInfo; }
+	// 장비 UI 참조자
+	UPROPERTY(BlueprintReadWrite)
+	class UUserWidget* EquipmentRef;
+
+	// 툴팁 UI 참조자
+	UPROPERTY()
+	class UUserWidget* TooltipRef;
+
+protected:
+	UPROPERTY()
+	AUMGProjectCharacter* MyPawn;
+
+	// 아이템들을 저장하는 배열
+	TArray<FItemInfo> InventoryList;
+
+	// 장착 아이템 정보
+	FEquipItemInfo EquipItemInfo;
+
+	// 무기 클래스
+	UPROPERTY()
+	class ABaseItem* WeaponItem;
+
+	// 장비창에 표시할 무기 클래스
+	UPROPERTY()
+	class ABaseItem* EquipWeaponItem;
+
+	UPROPERTY()
+	class UUserWidget* Tooltip;
 };

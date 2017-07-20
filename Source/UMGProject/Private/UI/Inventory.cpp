@@ -1,8 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "UMGProject.h"
-#include "UMGProjectCharacter.h"
-#include "ItemSlot.h"
 #include "Inventory.h"
 
 void UInventory::NativeConstruct()
@@ -72,6 +70,14 @@ void UInventory::RenewSlot()
 				BindButtonEvent(ItemSlotList[i]);
 			}
 		}
+	}
+}
+
+void UInventory::SetOwnerPawn(APawn * OwnerPawn)
+{
+	if (OwnerPawn && MyPawn != OwnerPawn)
+	{
+		MyPawn = Cast<AUMGProjectCharacter>(OwnerPawn);
 	}
 }
 

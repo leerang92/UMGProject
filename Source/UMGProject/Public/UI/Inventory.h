@@ -8,6 +8,8 @@
 #include "SlateBrush.h"
 #include "SlateTypes.h"
 #include "SlateColor.h"
+#include "ItemSlot.h"
+#include "UMGProjectCharacter.h"
 #include "Inventory.generated.h"
 
 /**
@@ -20,7 +22,6 @@ class UMGPROJECT_API UInventory : public UUserWidget
 
 public:
 	virtual void NativeConstruct() override;
-	//virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
 	// 아이템 슬롯 생성
 	UFUNCTION(BlueprintCallable, Category = "Inventory")
@@ -28,6 +29,24 @@ public:
 
 	void RenewSlot();
 
+	void SetOwnerPawn(APawn* OwnerPawn);
+
+	FORCEINLINE class AUMGProjectCharacter* GetOwnerPawn() const { return MyPawn; }
+
+protected:
+	// 버튼 이미지(스타일) 설정 후 반환
+	UFUNCTION(BlueprintCallable, Category = "Inventory")
+	FButtonStyle SetStyle(UTexture2D* GetImage);
+
+	// 아이템 슬롯을 UI Grid에 추가
+	void AddGridSlot(UUniformGridSlot* GridSlot);
+
+	void BindButtonEvent(UItemSlot* Slot);
+
+	// 아이템 슬롯 행과 열을 증가 시키는 함수
+	void IncrementSlotMatrix();
+
+public:
 	// 아이템 슬롯 클래스
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widgets")
 	TSubclassOf<class UUserWidget> ItemSlot;
@@ -51,27 +70,18 @@ public:
 	// 행의 갯수
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 	int ColumnLenth;
-	
+
 protected:
+	UPROPERTY()
+	class AUMGProjectCharacter* MyPawn;
+
 	// 생성 된 아이템 슬롯을 저장하는 배열
 	UPROPERTY()
 	TArray<class UItemSlot*> ItemSlotList;
 
 	// 아이템 슬롯들을 배정할 UniformGird
 	UPROPERTY()
-	UUniformGridPanel* ItemGrid;
-
-	// 버튼 이미지(스타일) 설정 후 반환
-	UFUNCTION(BlueprintCallable, Category = "Inventory")
-	FButtonStyle SetStyle(UTexture2D* GetImage);
-
-	// 아이템 슬롯을 UI Grid에 추가
-	void AddGridSlot(UUniformGridSlot* GridSlot);
-
-	void BindButtonEvent(UItemSlot* Slot);
-
-	// 아이템 슬롯 행과 열을 증가 시키는 함수
-	void IncrementSlotMatrix();
+	class UUniformGridPanel* ItemGrid;
 
 private:
 	// 행과 열

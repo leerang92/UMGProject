@@ -11,11 +11,6 @@ UItemManager::UItemManager()
 	UE_LOG(LogClass, Warning, TEXT("Constructor"));
 }
 
-void UItemManager::Initialize(APawn* pOwnerPawn)
-{
-	OwnerPawn = pOwnerPawn;
-}
-
 void UItemManager::AddItem(FItemInfo Item)
 {
 	// 아이템 갯수가 0일 시 1개로 저장
@@ -64,10 +59,9 @@ void UItemManager::SetEquipItem(FItemInfo GetItem)
 
 void UItemManager::SetWeapon(FItemInfo GetItem)
 {
-	AUMGProjectCharacter* Character = Cast<AUMGProjectCharacter>(OwnerPawn);
-	UWorld* World = Character->GetWorld();
+	UWorld* World = MyPawn->GetWorld();
 
-	if (Character && World)
+	if (MyPawn && World)
 	{
 		// 이전 아이템 삭제
 		if (WeaponItem)
@@ -80,7 +74,7 @@ void UItemManager::SetWeapon(FItemInfo GetItem)
 		WeaponItem = World->SpawnActor<ABaseItem>((UClass*)GetItem.BPClass->GeneratedClass);
 		if (WeaponItem)
 		{
-			WeaponItem->Mesh->AttachTo(Character->GetMesh(), TEXT("WeaponSocket"));
+			WeaponItem->Mesh->AttachTo(MyPawn->GetMesh(), TEXT("WeaponSocket"));
 			EquipItemInfo.Weapon = GetItem;
 
 			SetEquipUICharacter(GetItem);
@@ -125,10 +119,9 @@ void UItemManager::RenewUI()
 
 void UItemManager::SetEquipUICharacter(FItemInfo GetItem)
 {
-	AUMGProjectCharacter* Character = Cast<AUMGProjectCharacter>(OwnerPawn);
-	UWorld* World = Character->GetWorld();
+	UWorld* World = MyPawn->GetWorld();
 
-	if (Character && World)
+	if (MyPawn && World)
 	{
 		// 이전 아이템 삭제
 		if (EquipWeaponItem)
@@ -140,7 +133,7 @@ void UItemManager::SetEquipUICharacter(FItemInfo GetItem)
 		EquipWeaponItem = World->SpawnActor<ABaseItem>((UClass*)GetItem.BPClass->GeneratedClass);
 		if (EquipWeaponItem)
 		{
-			EquipWeaponItem->Mesh->AttachTo(Character->EquipCharacter->Mesh, TEXT("WeaponSocket"));
+			EquipWeaponItem->Mesh->AttachTo(MyPawn->EquipCharacter->Mesh, TEXT("WeaponSocket"));
 		}
 	}
 }
@@ -156,11 +149,10 @@ void UItemManager::CreateTooltip(const FItemInfo & Item)
 		return;
 	if (Tooltip)
 		Tooltip->RemoveFromViewport();
-	
-	AUMGProjectCharacter* Character = Cast<AUMGProjectCharacter>(OwnerPawn);
-	if (Character)
+
+	if (MyPawn)
 	{
-		Tooltip = CreateWidget<UUserWidget>(Character->GetWorld(), Character->Tolltip);
+		Tooltip = CreateWidget<UUserWidget>(MyPawn->GetWorld(), MyPawn->Tolltip);
 		
 		if (Tooltip) 
 		{
@@ -168,7 +160,7 @@ void UItemManager::CreateTooltip(const FItemInfo & Item)
 			TC->GetItemInfo(Item);
 
 			FVector2D MousePosition = FVector2D::ZeroVector;
-			APlayerController* Controller = Character->GetWorld()->GetFirstPlayerController();
+			APlayerController* Controller = MyPawn->GetWorld()->GetFirstPlayerController();
 			Controller->GetMousePosition(MousePosition.X, MousePosition.Y);
 			Tooltip->SetPositionInViewport(MousePosition);
 
@@ -177,10 +169,18 @@ void UItemManager::CreateTooltip(const FItemInfo & Item)
 	}
 }
 
-void UItemManager::Remove()
+void UItemManager::RemoveTooltip()
 {
 	if (Tooltip)
 		Tooltip->RemoveFromViewport();
+}
+
+void UItemManager::SetOwnerPawn(APawn * OwnerPawn)
+{
+	if (OwnerPawn && MyPawn != OwnerPawn)
+	{
+		MyPawn = Cast<AUMGProjectCharacter>(OwnerPawn);
+	}
 }
 
 int UItemManager::GetItemAmount(int Index) const
