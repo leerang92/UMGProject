@@ -131,9 +131,7 @@ void AUMGProjectCharacter::PickUpItem()
 		ABaseItem* GetItem = Cast<ABaseItem>(ItemActor);
 		if (GetItem) 
 		{
-			//UE_LOG(LogClass, Warning, TEXT("%s"), *GetItem->Mesh->GetName());
 			ItemActor->Destroy();
-			//ABaseItem* SpawnItem = GetWorld()->SpawnActor<ABaseItem>((UClass*)GetItem->ItemInfo.BPClass->GeneratedClass, GetActorLocation(), FRotator::ZeroRotator);
 			Item->AddItem(GetItem->ItemInfo);
 		}
 	}

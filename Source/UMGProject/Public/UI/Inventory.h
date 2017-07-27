@@ -9,7 +9,6 @@
 #include "SlateTypes.h"
 #include "SlateColor.h"
 #include "ItemSlot.h"
-#include "UMGProjectCharacter.h"
 #include "Inventory.generated.h"
 
 /**
@@ -28,10 +27,6 @@ public:
 	void CreateItemSlot();
 
 	void RenewSlot();
-
-	void SetOwnerPawn(APawn* OwnerPawn);
-
-	FORCEINLINE class AUMGProjectCharacter* GetOwnerPawn() const { return MyPawn; }
 
 protected:
 	// 버튼 이미지(스타일) 설정 후 반환
@@ -72,9 +67,6 @@ public:
 	int ColumnLenth;
 
 protected:
-	UPROPERTY()
-	class AUMGProjectCharacter* MyPawn;
-
 	// 생성 된 아이템 슬롯을 저장하는 배열
 	UPROPERTY()
 	TArray<class UItemSlot*> ItemSlotList;

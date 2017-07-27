@@ -95,6 +95,8 @@ public:
 	UPROPERTY()
 	class UUserWidget* TooltipRef;
 
+	TSubclassOf<class UUserWidget> Inventroy;
+
 protected:
 	UPROPERTY()
 	AUMGProjectCharacter* MyPawn;

@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "UMGProject.h"
+#include "UMGProjectCharacter.h"
 #include "Inventory.h"
 
 void UInventory::NativeConstruct()
@@ -12,9 +13,7 @@ void UInventory::NativeConstruct()
 
 void UInventory::CreateItemSlot()
 {
-	if (!ItemSlot)
-	{
-		UE_LOG(LogClass, Warning, TEXT("아이템 슬롯 클래스가 없습니다."));
+	if (!ItemSlot) {
 		return;
 	}
 
@@ -26,7 +25,7 @@ void UInventory::CreateItemSlot()
 		{
 			// Uniform Gird에 Slot UI(Widget) 클래스 추가
 			AddGridSlot(ItemGrid->AddChildToUniformGrid(Widget));
-
+			
 			// 아이템 슬롯 설정
 			ItemSlotList.Add(Cast<UItemSlot>(Widget));
 			AUMGProjectCharacter* Character = Cast<AUMGProjectCharacter>(GetOwningPlayerPawn());
@@ -70,14 +69,6 @@ void UInventory::RenewSlot()
 				BindButtonEvent(ItemSlotList[i]);
 			}
 		}
-	}
-}
-
-void UInventory::SetOwnerPawn(APawn * OwnerPawn)
-{
-	if (OwnerPawn && MyPawn != OwnerPawn)
-	{
-		MyPawn = Cast<AUMGProjectCharacter>(OwnerPawn);
 	}
 }
 

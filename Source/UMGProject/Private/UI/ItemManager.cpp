@@ -9,6 +9,14 @@
 UItemManager::UItemManager()
 {
 	UE_LOG(LogClass, Warning, TEXT("Constructor"));
+
+	ConstructorHelpers::FObjectFinder<UBlueprint> BP_Inventory(TEXT("WidgetBlueprint'/Game/Blueprints/Interface/UI_Inventory.UI_Inventory'"));
+	//Inventroy = BP_Inventory.Object;
+
+	if (Inventroy)
+	{
+		UE_LOG(LogClass, Warning, TEXT("!!"));
+	}
 }
 
 void UItemManager::AddItem(FItemInfo Item)
